@@ -10,10 +10,14 @@ import (
 
 func main() {
 	router := gin.Default()
+    defineEndpoints(router)
+    startApp(router)
+}
 
-	router.GET("/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello world!")
-	})
+func defineEndpoints(router *gin.Engine) {
+    router.GET("/hello", func(c *gin.Context) {
+        c.String(http.StatusOK, "Hello world!")
+    })
 
     router.GET("/weather", func(c *gin.Context) {
         latitude, err := strconv.ParseFloat(c.Query("latitude"), 64)
@@ -24,6 +28,9 @@ func main() {
 
         c.IndentedJSON(http.StatusOK, weather.Get(latitude, longitude))
     })
+}
 
-	router.Run("localhost:8080")
+func startApp(router *gin.Engine) {
+    err := router.Run("localhost:8080")
+    error.Handle(err)
 }
